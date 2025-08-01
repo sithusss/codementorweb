@@ -6,6 +6,11 @@ import StartHere from '@/components/StartHere';
 import CreatorSection from '@/components/CreatorSection';
 import Footer from '@/components/Footer';
 
+export const metadata = {
+  title: 'CodeMentor',
+  description: 'Online learning platform for coding',
+};
+
 export default function Home() {
   return (
     <main className="font-sans mx-4 my-4 p-4">
