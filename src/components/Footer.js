@@ -17,7 +17,7 @@ export default function Footer() {
         <div>
           <h5 className="font-bold text-lg">Contact Us</h5>
           <p className="text-sm mt-2">
-            IIT School of Computing<br />
+            CodeMentor, Sri Lanka<br />
             +94 77 000 0000<br />
             email@codementor.com
           </p>

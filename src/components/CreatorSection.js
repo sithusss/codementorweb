@@ -12,9 +12,9 @@ export default function Creator() {
       </div>
       <div className="mt-4 text-sm text-gray-700">
         <div className="mx-auto w-10 h-10 relative">
-          <Image src="/creator.png" alt="Creator" fill className="rounded-full object-cover" />
+          <Image src="/images/creator.png" alt="Creator" fill className="rounded-full object-cover" />
         </div>
-        <p className="mt-2 font-bold">James Thomas</p>
+        <p className="mt-2 font-bold">Sandali Liyanage</p>
         <p>CREATOR</p>
       </div>
     </section>

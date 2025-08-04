@@ -6,6 +6,7 @@ import StartHere from '@/components/StartHere';
 import CreatorSection from '@/components/CreatorSection';
 import Footer from '@/components/Footer';
 
+
 export const metadata = {
   title: 'CodeMentor',
   description: 'Online learning platform for coding',
@@ -19,6 +20,7 @@ export default function Home() {
       <Stats />
       <HowToUse />
       <StartHere />
+   
       <CreatorSection />
       <Footer />
     </main>
