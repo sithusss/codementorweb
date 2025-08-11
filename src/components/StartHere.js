@@ -1,5 +1,5 @@
 'use client';
-import CodePlay from '@/components/CodePlayground';
+import CodePlayground from '@/components/CodePlayground';
 import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 
@@ -11,21 +11,25 @@ export default function StartHere() {
     Algorithms: ['Sorting', 'Searching', 'Recursion'],
   };
 
+  // Map category to Judge0 language identifiers
+  const categoryToLanguage = {
+    OOP: 'java',
+    SQL: 'mysql',
+    Algorithms: 'java', // or 'javascript' if you want
+  };
+
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedConcept, setSelectedConcept] = useState('');
   const [showOptimal, setShowOptimal] = useState(false);
-
-  // --- ADD missing state for optimized code ---
   const [optimalCode, setOptimalCode] = useState('');
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setSelectedCategory(value);
     setSelectedConcept('');
-    setShowOptimal(false);        // reset optimal display when category changes
+    setShowOptimal(false);
   };
 
-  // --- ADD missing handleClick function ---
   const handleClick = () => {
     setShowOptimal(true);
     setOptimalCode(
@@ -40,7 +44,6 @@ export default function StartHere() {
       <h2 className="text-2xl font-bold text-blue-800 text-center">Start Learning</h2>
 
       <div className="w-full min-h-screen p-6 bg-white rounded-xl shadow space-y-6">
-
         {/* Dropdowns */}
         <div className="flex gap-10 p-4 rounded-lg shadow">
           {/* Category Dropdown */}
@@ -65,7 +68,7 @@ export default function StartHere() {
               value={selectedConcept}
               onChange={(e) => {
                 setSelectedConcept(e.target.value);
-                setShowOptimal(false); // reset optimal when concept changes
+                setShowOptimal(false);
               }}
               disabled={!selectedCategory}
               className={`p-3 border rounded transition ${
@@ -84,7 +87,7 @@ export default function StartHere() {
           </div>
         </div>
 
-        {/* Colorful Boxes */}
+        {/* Info Boxes */}
         {isBoxesUnlocked && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 bg-pink-200 rounded-lg shadow-lg">
@@ -100,8 +103,7 @@ export default function StartHere() {
             <div className="p-6 bg-blue-200 rounded-lg shadow-lg font-mono whitespace-pre-wrap">
               <h3 className="font-bold text-lg mb-2 text-blue-800">Sample Code</h3>
               <pre className="text-blue-900">
-{`// Sample code for ${selectedConcept}
-console.log("Hello, world!");`}
+                {`// Sample code for ${selectedConcept}\nconsole.log("Hello, world!");`}
               </pre>
             </div>
           </div>
@@ -110,10 +112,10 @@ console.log("Hello, world!");`}
         {/* Code Editor */}
         {isBoxesUnlocked && (
           <div className="pt-6">
-            <CodePlay />
+            <CodePlayground language={categoryToLanguage[selectedCategory]} />
           </div>
         )}
-  
+
         {isBoxesUnlocked && (
           <div className="pt-6">
             <button
@@ -124,7 +126,6 @@ console.log("Hello, world!");`}
               Get Optimized Answer
             </button>
 
-            {/* Inline textarea for optimized code */}
             {showOptimal && (
               <textarea
                 className="mt-4 w-full h-40 p-3 rounded-md border border-gray-300 bg-gray-50 resize-none text-gray-700"
