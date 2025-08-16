@@ -1,33 +1,32 @@
 'use client';
 import CodePlayground from '@/components/CodePlayground';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 
+
 export default function StartHere() {
-  const categories = ['OOP', 'SQL', 'Algorithms'];
-  const concepts = {
-    OOP: ['Class & Object', 'Inheritance', 'Polymorphism'],
-    SQL: ['SELECT', 'JOIN', 'GROUP BY'],
-    Algorithms: ['Sorting', 'Searching', 'Recursion'],
-  };
+    const [categories, setCategories] = useState([]);
+    const [concepts, setConcepts] = useState([]); // ✅ new: store concepts from API
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedConcept, setSelectedConcept] = useState("");
+    const [showOptimal, setShowOptimal] = useState(false);
+  const [optimalCode, setOptimalCode] = useState("");
 
-  // Map category to Judge0 language identifiers
-  const categoryToLanguage = {
-    OOP: 'java',
-    SQL: 'mysql',
-    Algorithms: 'java', // or 'javascript' if you want
-  };
-
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedConcept, setSelectedConcept] = useState('');
-  const [showOptimal, setShowOptimal] = useState(false);
-  const [optimalCode, setOptimalCode] = useState('');
+    useEffect(() => {
+      fetch("/api/categories")
+        .then((res) => res.json())
+        .then((data) => setCategories(data));
+    }, []);
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setSelectedCategory(value);
     setSelectedConcept('');
     setShowOptimal(false);
+
+    fetch(`/api/concepts?category=${value}`)
+      .then((res) => res.json())
+      .then((data) => setConcepts(data));
   };
 
   const handleClick = () => {
@@ -56,7 +55,8 @@ export default function StartHere() {
             >
               <option value="">-- Choose a Category --</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat.category_no} value={cat.category_name}>{cat.category_name}</option>
+                
               ))}
             </select>
           </div>
@@ -80,8 +80,10 @@ export default function StartHere() {
               <option value="">
                 {!selectedCategory ? '-- Select a Category First --' : '-- Choose a Concept --'}
               </option>
-              {selectedCategory && concepts[selectedCategory].map((concept) => (
-                <option key={concept} value={concept}>{concept}</option>
+              {concepts.map((concept) => (
+                <option key={concept.concept_no} value={concept.concept_name}>
+                  {concept.concept_name}
+                </option>
               ))}
             </select>
           </div>
