@@ -1,42 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 
-export default function CodePlayground() {
-  const [categories, setCategories] = useState([]);
-  const [concepts, setConcepts] = useState([]);
-  const [category, setCategory] = useState('');
-  const [concept, setConcept] = useState('');
-  const [question, setQuestion] = useState(null);
+export default function CodePlayground({ question }) {
   const [code, setCode] = useState('// Write your code here');
   const [output, setOutput] = useState('');
-
-  // Fetch categories on mount
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(setCategories);
-  }, []);
-
-  // Fetch concepts when category changes
-  useEffect(() => {
-    if (category) {
-      fetch(`/api/concepts?category=${category}`)
-        .then(res => res.json())
-        .then(setConcepts);
-    }
-  }, [category]);
-
-  // Fetch question when category or concept changes
-  useEffect(() => {
-    if (category && concept) {
-      fetch(`/api/question?category=${category}&concept=${concept}`)
-        .then(res => res.json())
-        .then(setQuestion);
-    }
-  }, [category, concept]);
 
   const handleRunCode = async () => {
     setOutput("Running...");
@@ -56,31 +26,6 @@ export default function CodePlayground() {
   return (
     <div className="max-w-9xl mx-auto p-6 space-y-6 bg-white rounded-xl shadow">
       <h2 className="text-2xl font-bold text-blue-800">Try Your Code</h2>
-
-      {/* Dropdowns */}
-      <div className="flex gap-4 mb-4">
-        <select
-          value={category}
-          onChange={e => { setCategory(e.target.value); setConcept(''); }}
-          className="border rounded p-2"
-        >
-          <option value="">Select Category</option>
-          {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-        <select
-          value={concept}
-          onChange={e => setConcept(e.target.value)}
-          className="border rounded p-2"
-          disabled={!category}
-        >
-          <option value="">Select Concept</option>
-          {concepts.map(con => (
-            <option key={con} value={con}>{con}</option>
-          ))}
-        </select>
-      </div>
 
       {question && (
         <div className="mb-4 p-4 bg-blue-50 rounded">

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const JUDGE0_URL = "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true";
+const JUDGE0_URL = "https://judge0-ce.p.rapidapi.com/about ";
 const API_HEADERS = {
   "Content-Type": "application/json",
   "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
@@ -10,6 +10,7 @@ const API_HEADERS = {
 const LANGUAGE_IDS = {
   java: 62,   // Java (OpenJDK 17)
   mysql: 33,  // MySQL
+  csharp: 78, // CSharp
 };
 
 export async function POST(request) {
