@@ -3,20 +3,29 @@ import CodePlayground from '@/components/CodePlayground';
 import { useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 
+const categoryToLanguage = {
+  1: "java",
+  2: "csharp",
+  3: "mysql"
+  
+};
 
 export default function StartHere() {
-    const [categories, setCategories] = useState([]);
-    const [concepts, setConcepts] = useState([]); // ✅ new: store concepts from API
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [selectedConcept, setSelectedConcept] = useState("");
-    const [showOptimal, setShowOptimal] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [concepts, setConcepts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedConcept, setSelectedConcept] = useState("");
+  const [showOptimal, setShowOptimal] = useState(false);
   const [optimalCode, setOptimalCode] = useState("");
 
-    useEffect(() => {
-      fetch("/api/categories")
-        .then((res) => res.json())
-        .then((data) => setCategories(data));
-    }, []);
+ useEffect(() => {
+  fetch("/api/categories")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Categories:", data); // Add this
+      setCategories(data);
+    });
+}, []);
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
@@ -25,38 +34,45 @@ export default function StartHere() {
     setShowOptimal(false);
 
     fetch(`/api/concepts?category=${value}`)
-      .then((res) => res.json())
-      .then((data) => setConcepts(data));
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Concepts:", data); // Add this
+      setConcepts(data);
+    });
   };
 
   const handleClick = () => {
     setShowOptimal(true);
     setOptimalCode(
-      `// Optimized code for ${selectedConcept} in ${selectedCategory}\nconsole.log("Optimized answer!");`
+      `// Optimized code for concept ${selectedConcept} in category ${selectedCategory}\nconsole.log("Optimized answer!");`
     );
   };
 
   const isBoxesUnlocked = selectedCategory && selectedConcept;
 
-  return (
-    <div className="w-full p-6 bg-white shadow space-y-6">
-      <h2 className="text-2xl font-bold text-blue-800 text-center">Start Learning</h2>
+  // lookup selected concept
+  const selectedConceptData = concepts.find(c => c.concept_no === Number(selectedConcept));
 
-      <div className="w-full min-h-screen p-6 bg-white rounded-xl shadow space-y-6">
+  return (
+    <div className="w-full p-6 bg-gray-50 space-y-6">
+      <h2 className="text-3xl font-bold text-blue-800 text-center">Start Learning</h2>
+
+      <div className="w-full p-6 bg-white rounded-xl shadow-md space-y-6">
         {/* Dropdowns */}
-        <div className="flex gap-10 p-4 rounded-lg shadow">
+        <div className="flex flex-col md:flex-row gap-6">
           {/* Category Dropdown */}
           <div className="flex flex-col flex-1">
             <label className="font-semibold text-gray-700 mb-2">Select Category</label>
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className="p-3 border rounded bg-blue-100 text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="p-3 border rounded bg-blue-50 text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200"
             >
               <option value="">-- Choose a Category --</option>
               {categories.map((cat) => (
-                <option key={cat.category_no} value={cat.category_name}>{cat.category_name}</option>
-                
+                <option key={cat.category_no} value={cat.category_no}>
+                  {cat.category_name}
+                </option>
               ))}
             </select>
           </div>
@@ -74,14 +90,14 @@ export default function StartHere() {
               className={`p-3 border rounded transition ${
                 !selectedCategory
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-100 text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200'
+                  : 'bg-blue-50 text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200'
               }`}
             >
               <option value="">
                 {!selectedCategory ? '-- Select a Category First --' : '-- Choose a Concept --'}
               </option>
               {concepts.map((concept) => (
-                <option key={concept.concept_no} value={concept.concept_name}>
+                <option key={concept.concept_no} value={concept.concept_no}>
                   {concept.concept_name}
                 </option>
               ))}
@@ -90,23 +106,26 @@ export default function StartHere() {
         </div>
 
         {/* Info Boxes */}
-        {isBoxesUnlocked && (
+        {isBoxesUnlocked && selectedConceptData && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 bg-pink-200 rounded-lg shadow-lg">
+            {/* Concept Description */}
+            <div className="p-6 bg-pink-100 rounded-lg shadow">
               <h3 className="font-bold text-lg mb-2 text-pink-800">Concept Description</h3>
-              <p className="text-pink-900">Description of {selectedConcept} in {selectedCategory} goes here.</p>
+              <p className="text-pink-900">
+                <strong>{selectedConceptData.concept_name}:</strong> {selectedConceptData.description}
+              </p>
             </div>
 
-            <div className="p-6 bg-green-200 rounded-lg shadow-lg">
+            {/* Real-world Example */}
+            <div className="p-6 bg-green-100 rounded-lg shadow">
               <h3 className="font-bold text-lg mb-2 text-green-800">Real-world Example</h3>
-              <p className="text-green-900">Real-world example for {selectedConcept} in {selectedCategory}.</p>
+              <p className="text-green-900">{selectedConceptData.real_example}</p>
             </div>
 
-            <div className="p-6 bg-blue-200 rounded-lg shadow-lg font-mono whitespace-pre-wrap">
+            {/* Sample Code */}
+            <div className="p-6 bg-blue-100 rounded-lg shadow font-mono whitespace-pre-wrap">
               <h3 className="font-bold text-lg mb-2 text-blue-800">Sample Code</h3>
-              <pre className="text-blue-900">
-                {`// Sample code for ${selectedConcept}\nconsole.log("Hello, world!");`}
-              </pre>
+              <pre className="text-blue-900">{selectedConceptData.eg_code}</pre>
             </div>
           </div>
         )}
@@ -118,6 +137,7 @@ export default function StartHere() {
           </div>
         )}
 
+        {/* Optimized Answer Button */}
         {isBoxesUnlocked && (
           <div className="pt-6">
             <button
