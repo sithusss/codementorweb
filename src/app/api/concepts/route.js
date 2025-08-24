@@ -12,7 +12,7 @@ export async function GET(request) {
         const connection = await getConnection();
 
         const [rows] = await connection.execute(
-            "SELECT * FROM concepts WHERE category_no = (SELECT category_no FROM category WHERE category_name = ?)", [category]
+            "SELECT * FROM concepts WHERE category_no = (SELECT category_no FROM category WHERE category_no = ?)", [category]
         );
         
 
