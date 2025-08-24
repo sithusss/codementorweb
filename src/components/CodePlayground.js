@@ -43,6 +43,11 @@ export default function CodePlayground({ conceptNo, category, questionNo }) {
 
   const currentQuestion = questions[currentIdx];
 
+  useEffect(() => {
+    setShowOptimal(false);
+    setOptimalCode('');
+  }, [currentIdx]);
+
   const handleRunCode = async () => {
     if (!currentLanguageId) {
       setOutput('Invalid category selected.');
@@ -121,7 +126,7 @@ export default function CodePlayground({ conceptNo, category, questionNo }) {
           onClick={() => fetchOptimalCode(currentQuestion.question_no)}
           className="flex items-center gap-2 bg-purple-600 text-white px-5 py-3 rounded-full hover:bg-purple-700 transition mt-4"
         >
-          <Sparkles size={20} /> Get Optimized Answer
+          <Sparkles size={20} /> See the Answer
         </button>
       )}
 
