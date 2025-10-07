@@ -20,9 +20,9 @@ export default function Home() {
       <Stats />
       <HowToUse />
       <StartHere />
-   
       <CreatorSection />
       <Footer />
+
     </main>
   );
 }
